@@ -98,26 +98,33 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 		 */
 		public function add_shortcode( $atts, $content = null ) {
 			$defaults = [
-				'skip'       => '',
-				'limit'      => '',
-				'location'   => '',
-				'commitment' => '',
-				'team'       => '',
-				'department' => '',
-				'level'      => '',
-				'group'      => '',
-				'template'   => 'default',
-				'site'       => 'leverdemo',
+				'skip'                 => '',
+				'limit'                => '',
+				'location'             => '',
+				'commitment'           => '',
+				'team'                 => '',
+				'department'           => '',
+				'level'                => '',
+				'group'                => '',
+				'template'             => 'default',
+				'site'                 => 'leverdemo',
+				'filters'              => 'enabled',
+				'primary-color'        => null,
+				'primary-text-color'   => null,
 			];
 			$atts     = shortcode_atts( $defaults, $atts, $this->slug );
 			$site     = $atts['site'];
 
 			unset( $atts['template'], $atts['site'] );
 
-			$active_filters = $this->get_active_filters_from_request();
+			$filters        = null;
+			$filters_status = $atts['filters'] === 'enabled';
+
+			if ( $filters_status ) {
+				$active_filters = $this->get_active_filters_from_request();
+			}
 
 			$atts = $this->populate_atts_with_filters_from_request( $atts );
-
 
 			$filtered_jobs = Lever_Service::get_jobs( $site, $atts );
 			$jobs_by_group = [];
@@ -126,8 +133,11 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 			}
 
 			unset( $atts['team'], $atts['location'], $atts['department'], $atts['commitment'] );
-			$full_job_postings = Lever_Service::get_jobs( $site, $atts );
-			$filters           = Job_Posting_Service::get_available_filters( $full_job_postings );
+
+			if ( $filters_status ) {
+				$full_job_postings = Lever_Service::get_jobs( $site, $atts );
+				$filters           = Job_Posting_Service::get_available_filters( $full_job_postings );
+			}
 
 			ob_start();
 			wp_enqueue_style( $this->slug );
