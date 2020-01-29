@@ -468,9 +468,7 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 				return;
 			}
 			?>
-            <script type="application/ld+json"><?php
-				echo $json_ld_job_posting;
-				?></script>
+            <script type="application/ld+json"><?php echo $json_ld_job_posting; ?></script>
 			<?php
 		}
 

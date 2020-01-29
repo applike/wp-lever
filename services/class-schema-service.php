@@ -21,7 +21,7 @@ class Schema_Service {
 		}
 
 		$json_ld = array(
-			"@content"           => "http://schema.org/",
+			"@context"           => "http://schema.org",
 			"@type"              => "JobPosting",
 			"title"              => $job_posting->get_title(),
 			"description"        => $job_posting->get_description()->get_formatted(),
@@ -32,7 +32,13 @@ class Schema_Service {
 			),
 			"jobLocation"        => array(
 				"@type"   => "Place",
-				"address" => $job_posting->get_categories()->get_location()
+				"address" => array(
+					"@type"           => "PostalAddress",
+					"addressLocality" => $job_posting->get_categories()->get_location(),
+					"addressRegion"   => null,
+					"addressCountry"  => null,
+					"postalCode"      => null,
+				)
 			),
 			"hiringOrganization" => array(
 				"@type"      => "Organization",
@@ -41,13 +47,36 @@ class Schema_Service {
 					"@type" => "Organization",
 					"name"  => $job_posting->get_categories()->get_team()
 				)
-			)
+			),
+			"employmentType"     => self::employmentTypeFromCommitment( $job_posting->get_categories()->get_commitment() )
 		);
 
-		if ($job_posting->get_created_at() != null){
-			$json_ld["datePosted"] = $job_posting->get_created_at()->format("Y-m-d\TH:i:sO");
+		if ( $job_posting->get_created_at() != null ) {
+			$json_ld["datePosted"] = $job_posting->get_created_at()->format( "Y-m-d\TH:i:sO" );
 		}
 
-		return json_encode( $json_ld, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+		return json_encode( $json_ld, JSON_UNESCAPED_SLASHES );
+	}
+
+	/**
+	 * @param string|null $commitment
+	 *
+	 * @return string|null
+	 */
+	private static function employmentTypeFromCommitment( $commitment ) {
+		switch ( $commitment ) {
+			case "Full time":
+				return "FULL_TIME";
+				break;
+			case "Part time":
+				return "PART_TIME";
+				break;
+			case "Intern":
+			case "Internship":
+			case "Working student":
+				return "INTERN";
+			default:
+				return null;
+		}
 	}
 }

@@ -118,7 +118,8 @@ class Api_Response_Transformer {
 
 
 		try {
-			$created_at = new \DateTime( $item['createdAt'] );
+			$created_at = new \DateTime();
+			$created_at->setTimestamp( $item['createdAt'] / 1000 );
 		} catch ( \Exception $e ) {
 			$created_at = null;
 		}
