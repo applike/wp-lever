@@ -134,6 +134,15 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 			];
 			$atts     = shortcode_atts( $defaults, $atts, $this->slug );
 
+			$atts["options"] = array(
+				"schema" => array(
+					"address_region" => esc_attr( get_option( 'address_region', '' ) ),
+					"postal_code"    => esc_attr( get_option( 'postal_code', '' ) ),
+					"street_address" => esc_attr( get_option( 'street_address', '' ) ),
+					"logo_url"       => esc_attr( get_option( 'logo_url', '' ) ),
+				)
+			);
+
 			$silentConf = esc_attr( get_option( 'silent', '' ) );
 			$silent     = $silentConf == 'on' ? true : false;
 			$api_key    = esc_attr( get_option( 'api_key', '' ) );
@@ -198,6 +207,26 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 				'success_message'
 			);
 
+			register_setting(
+				'wp-lever-settings-page',
+				'address_region'
+			);
+
+			register_setting(
+				'wp-lever-settings-page',
+				'postal_code'
+			);
+
+			register_setting(
+				'wp-lever-settings-page',
+				'street_address'
+			);
+
+			register_setting(
+				'wp-lever-settings-page',
+				'logo_url'
+			);
+
 			add_settings_field(
 				'api-key',
 				'Api Key',
@@ -245,6 +274,76 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 				'wp-lever-settings-page',
 				'wp-lever-section'
 			);
+
+			add_settings_field(
+				'address-region',
+				'Schema.org addressRegion field',
+				[ $this, 'wp_lever_address_region_setting_cb' ],
+				'wp-lever-settings-page',
+				'wp-lever-section'
+			);
+
+			add_settings_field(
+				'postal-code',
+				'Schema.org postalCode field',
+				[ $this, 'wp_lever_postal_code_setting_cb' ],
+				'wp-lever-settings-page',
+				'wp-lever-section'
+			);
+
+			add_settings_field(
+				'street-address',
+				'Schema.org streetAddress field',
+				[ $this, 'wp_lever_street_address_setting_cb' ],
+				'wp-lever-settings-page',
+				'wp-lever-section'
+			);
+
+			add_settings_field(
+				'logo-url',
+				'Schema.org logo field',
+				[ $this, 'wp_lever_logo_url_setting_cb' ],
+				'wp-lever-settings-page',
+				'wp-lever-section'
+			);
+		}
+
+		function wp_lever_logo_url_setting_cb() {
+			$logo_url = esc_attr( get_option( 'logo_url', '' ) );
+			?>
+            <div>
+                <input type="text" name="logo_url" class="regular-text code" value="<?php echo $logo_url; ?>">
+            </div>
+			<?php
+		}
+
+		function wp_lever_street_address_setting_cb() {
+			$street_address = esc_attr( get_option( 'street_address', '' ) );
+			?>
+            <div>
+                <input type="text" name="street_address" class="regular-text code"
+                       value="<?php echo $street_address; ?>">
+            </div>
+			<?php
+		}
+
+		function wp_lever_postal_code_setting_cb() {
+			$postal_code = esc_attr( get_option( 'postal_code', '' ) );
+			?>
+            <div>
+                <input type="text" name="postal_code" class="regular-text code" value="<?php echo $postal_code; ?>">
+            </div>
+			<?php
+		}
+
+		function wp_lever_address_region_setting_cb() {
+			$address_region = esc_attr( get_option( 'address_region', '' ) );
+			?>
+            <div>
+                <input type="text" name="address_region" class="regular-text code"
+                       value="<?php echo $address_region; ?>">
+            </div>
+			<?php
 		}
 
 		function wp_lever_success_message_setting_cb() {
@@ -407,7 +506,7 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 		private function job_description_page( $atts, $job_id ) {
 			$job = Lever_Service::get_job( $atts['site'], $job_id );
 
-			$json_ld_string = Schema_Service::getJsonLDString( $job );
+			$json_ld_string = Schema_Service::getJsonLDString( $atts, $job );
 			add_action( 'wp_footer', function () use ( $json_ld_string ) {
 				self::json_ld_schema( $json_ld_string );
 			} );

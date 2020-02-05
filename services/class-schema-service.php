@@ -11,11 +11,12 @@ namespace WP_Lever\Services;
  */
 class Schema_Service {
 	/**
+	 * @param array $atts
 	 * @param \WP_Lever\Data_Transfer_Objects\Job_Posting|null $job_posting
 	 *
 	 * @return string
 	 */
-	public static function getJsonLDString( $job_posting ) {
+	public static function getJsonLDString( $atts, $job_posting ) {
 		if ( $job_posting == null ) {
 			return "";
 		}
@@ -35,14 +36,16 @@ class Schema_Service {
 				"address" => array(
 					"@type"           => "PostalAddress",
 					"addressLocality" => $job_posting->get_categories()->get_location(),
-					"addressRegion"   => null,
-					"addressCountry"  => null,
-					"postalCode"      => null,
+					"addressRegion"   => $atts['options']['schema']['address_region'],
+					"streetAddress"   => $atts['options']['schema']['street_address'],
+					"postalCode"      => $atts['options']['schema']['postal_code'],
 				)
 			),
 			"hiringOrganization" => array(
 				"@type"      => "Organization",
 				"name"       => $job_posting->get_categories()->get_department(),
+				"sameAs"     => get_site_url(),
+				"logo"       => $atts['options']['schema']['logo_url'],
 				"department" => array(
 					"@type" => "Organization",
 					"name"  => $job_posting->get_categories()->get_team()
