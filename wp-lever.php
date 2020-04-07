@@ -48,7 +48,7 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 	 * Class WP_Lever
 	 */
 	class WP_Lever {
-		const VERSION = "1.1.3";
+		const VERSION = "1.1.4";
 
 		/**
 		 * Slug used in various places.
