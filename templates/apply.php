@@ -35,7 +35,7 @@
                     <h4>Submit your application</h4>
                     <ul>
                         <li class="application-question">
-                            <label for="resume-upload-input">Resume/CV</label>
+                            <label for="resume-upload-input">Resume/CV<span class="required">✱</span></label>
                             <div class="field">
                                 <div class="lever-file-input">
                                     <svg class="icon icon-paperclip" x="0px" y="0px" width="16px" height="16"
@@ -47,7 +47,7 @@
                                     </svg>
                                     <span class="filename"></span>
                                     <span class="default-label">ATTACH RESUME/CV</span>
-                                    <input type="file" name="lever_resume" id="resume-upload-input"/>
+                                    <input type="file" name="lever_resume" id="resume-upload-input" required=""/>
                                 </div>
                             </div>
                         </li>
