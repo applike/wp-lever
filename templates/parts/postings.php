@@ -25,9 +25,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <div>
                             <ul class="lever-categories">
 								<?php
-								$location   = $job->get_categories()->get_location();
-								$department = $job->get_categories()->get_department();
-								$team       = $job->get_categories()->get_team();
 								$commitment = $job->get_categories()->get_commitment();
 								?>
 								<?php if ( ! empty( $location ) ): ?>

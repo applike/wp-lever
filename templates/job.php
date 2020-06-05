@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="lever-job-action">
-                <a href="<?php echo $this->build_apply_url( $job->get_id() ); ?>"
+                <a href="<?php echo $job->get_apply_url(); ?>"
                    class="lever-job-apply"><?php esc_html_e( 'Apply For this job', 'wp-lever' ); ?></a>
             </div>
         </div>
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="lever-job-action text-center">
-            <a href="<?php echo $this->build_apply_url( $job->get_id() ); ?>"
+            <a href="<?php echo $job->get_apply_url(); ?>"
                class="lever-job-apply action-lg"><?php esc_html_e( 'Apply For this job', 'wp-lever' ); ?></a>
         </div>
     </div>
