@@ -547,9 +547,9 @@ if ( ! class_exists( 'WP_Lever' ) ) {
 				$filtered_jobs = $full_job_postings;
 			}
 
-			$jobs_by_group = [];
+			$jobs_by_company = [];
 			if ( null !== $filtered_jobs ) {
-				$jobs_by_group = Job_Posting_Service::group_job_postings_by_team( $filtered_jobs );
+				$jobs_by_company = Job_Posting_Service::group_job_postings_by_company( $filtered_jobs );
 			}
 
 			ob_start();

@@ -11,17 +11,22 @@ class Job_Posting_Service {
 	/**
 	 * @param Job_Posting[] $job_postings
 	 *
-	 * @return Job_Posting[][]
+	 * @return Job_Posting[][][]
 	 */
-	public static function group_job_postings_by_team( $job_postings ) {
+	public static function group_job_postings_by_company( $job_postings ) {
 		$grouped = [];
 
 		foreach ( $job_postings as $job_posting ) {
-			$team               = $job_posting->get_categories()->get_team();
-			$grouped[ $team ][] = $job_posting;
+			$department                        = $job_posting->get_categories()->get_department();
+			$team                              = $job_posting->get_categories()->get_team();
+			$grouped[ $department ][ $team ][] = $job_posting;
 		}
 
 		ksort( $grouped );
+
+		foreach ($grouped as $department => $teams){
+			ksort($grouped[$department]);
+		}
 
 		return $grouped;
 	}
@@ -79,24 +84,24 @@ class Job_Posting_Service {
 		$filtered_job_postings = [];
 
 		foreach ( $job_postings as $job_posting ) {
-			$location   = mb_strtolower($job_posting->get_categories()->get_location());
-			$department = mb_strtolower($job_posting->get_categories()->get_department());
-			$team      = mb_strtolower($job_posting->get_categories()->get_team());
-			$commitment = mb_strtolower($job_posting->get_categories()->get_commitment());
+			$location   = mb_strtolower( $job_posting->get_categories()->get_location() );
+			$department = mb_strtolower( $job_posting->get_categories()->get_department() );
+			$team       = mb_strtolower( $job_posting->get_categories()->get_team() );
+			$commitment = mb_strtolower( $job_posting->get_categories()->get_commitment() );
 
-			if ( isset( $atts["location"] ) && $atts["location"] !== "" && mb_strtolower($atts["location"]) != $location ) {
+			if ( isset( $atts["location"] ) && $atts["location"] !== "" && mb_strtolower( $atts["location"] ) != $location ) {
 				continue;
 			}
 
-			if ( isset( $atts["department"] ) && $atts["department"] !== "" && mb_strtolower($atts["department"]) != $department ) {
+			if ( isset( $atts["department"] ) && $atts["department"] !== "" && mb_strtolower( $atts["department"] ) != $department ) {
 				continue;
 			}
 
-			if ( isset( $atts["team"] ) && $atts["team"] !== "" && mb_strtolower($atts["team"]) != $team ) {
+			if ( isset( $atts["team"] ) && $atts["team"] !== "" && mb_strtolower( $atts["team"] ) != $team ) {
 				continue;
 			}
 
-			if ( isset( $atts["commitment"] ) && $atts["commitment"] !== "" && mb_strtolower($atts["commitment"]) != $commitment ) {
+			if ( isset( $atts["commitment"] ) && $atts["commitment"] !== "" && mb_strtolower( $atts["commitment"] ) != $commitment ) {
 				continue;
 			}
 

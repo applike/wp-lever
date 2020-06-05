@@ -14,7 +14,7 @@ if ( ! empty( $filters ) ) {
 	include 'parts/filters.php';
 }
 
-if ( ! empty( $jobs_by_group ) ) {
+if ( ! empty( $jobs_by_company ) ) {
 	include 'parts/postings.php';
 } else {
 	include 'parts/no-postings.php';
